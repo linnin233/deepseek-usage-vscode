@@ -1,0 +1,98 @@
+{
+  "name": "deepseek-usage",
+  "displayName": "DeepSeek Usage Tracker",
+  "description": "DeepSeek API 用量统计与费用追踪 — 余额 + Token 消耗 + 消费明细",
+  "version": "0.0.1",
+  "publisher": "linnin233",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linnin233/deepseek-usage"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "deepseek",
+    "usage",
+    "token",
+    "cost",
+    "ai",
+    "llm",
+    "dashboard"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "DeepSeek Usage",
+      "properties": {
+        "deepseek-usage.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DeepSeek API Key (sk-...). 用于查询余额（/user/balance）。获取地址: https://platform.deepseek.com/api_keys",
+          "order": 1
+        },
+        "deepseek-usage.sessionToken": {
+          "type": "string",
+          "default": "",
+          "description": "Platform Session Token (Bearer ...)。用于查询用量数据。获取方式：浏览器登录 platform.deepseek.com → F12 → Network → 找 usage 请求 → 复制 Authorization 头的 Bearer 值",
+          "order": 2
+        },
+        "deepseek-usage.cookie": {
+          "type": "string",
+          "default": "",
+          "description": "浏览器 Cookie 字符串。和 Session Token 一起从浏览器获取，用于用量 API 认证",
+          "order": 3
+        },
+        "deepseek-usage.proxy": {
+          "type": "string",
+          "default": "",
+          "description": "HTTP 代理地址（可选）。国内用户需要梯子时填写，如 http://127.0.0.1:7890。留空则不使用代理",
+          "order": 4
+        },
+        "deepseek-usage.language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "zh-cn"
+          ],
+          "enumDescriptions": [
+            "English",
+            "简体中文"
+          ],
+          "default": "zh-cn",
+          "description": "Display language / 显示语言",
+          "order": 5
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "deepseek-usage.showUsage",
+        "title": "DeepSeek Usage: Open Dashboard"
+      },
+      {
+        "command": "deepseek-usage.refresh",
+        "title": "DeepSeek Usage: Refresh"
+      },
+      {
+        "command": "deepseek-usage.setApiKey",
+        "title": "DeepSeek Usage: Set API Key"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0"
+  }
+}
