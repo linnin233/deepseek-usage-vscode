@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "publisher": "linnin233",
   "license": "MIT",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/linnin233/deepseek-usage-vscode"
