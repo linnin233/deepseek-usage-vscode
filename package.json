@@ -1,5 +1,5 @@
 {
-  "name": "deepseek-usage",
+  "name": "ds-usage-cost",
   "displayName": "DeepSeek Usage Tracker",
   "description": "DeepSeek API 用量统计与费用追踪 — 余额 + Token 消耗 + 消费明细",
   "version": "0.0.1",
@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/linnin233/deepseek-usage"
+    "url": "https://github.com/linnin233/deepseek-usage-vscode"
   },
   "engines": {
     "vscode": "^1.85.0"
