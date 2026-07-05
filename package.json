@@ -2,7 +2,7 @@
   "name": "ds-usage-cost",
   "displayName": "DeepSeek Usage & Cost",
   "description": "DeepSeek API 用量统计与费用追踪 — 余额 + Token 消耗 + 消费明细",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "linnin233",
   "license": "MIT",
   "icon": "icon.png",
