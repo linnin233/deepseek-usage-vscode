@@ -20,7 +20,7 @@ const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 const L10N = {
   en: {
     title: 'DeepSeek Usage', balance: 'Balance', monthCost: 'This Month',
-    remaining: 'Remaining', monthlyUsage: 'Monthly Usage (Tokens)',
+    monthlyUsage: 'Monthly Usage (Tokens)',
     modelDetail: 'Detail', requests: 'Requests', tokens: 'Tokens',
     loading: 'Loading...', refresh: 'Refresh', noSessionToken: 'Configure Session Token & Cookie',
     errNoApiKey: 'Set API Key', cacheHit: 'Cache Hit', cacheMiss: 'Cache Miss',
@@ -28,7 +28,7 @@ const L10N = {
   },
   'zh-cn': {
     title: 'DeepSeek Usage', balance: '余额', monthCost: '本月消费',
-    remaining: '剩余', monthlyUsage: '月度用量 (Tokens)',
+    monthlyUsage: '月度用量 (Tokens)',
     modelDetail: '明细', requests: '请求数', tokens: 'Tokens',
     loading: '加载中...', refresh: '刷新', noSessionToken: '请在设置中配置 Session Token 和 Cookie',
     errNoApiKey: '请设置 API Key', cacheHit: '缓存命中', cacheMiss: '缓存未命中',
@@ -186,14 +186,13 @@ function buildPanelHtml(balance, usage, i18n, month, year) {
   const bal = hasBalance ? balance.balance_infos[0] : null;
   const totalBalance = bal ? parseFloat(bal.total_balance) : 0;
   const monthCost = usage ? usage.totalCost : 0;
-  const remaining = totalBalance - monthCost;
   const hasUsage = usage && usage.models.length > 0;
 
   // Inject data as JSON for JS
   const injectData = JSON.stringify({
     balance: balance, usage: usage, i18n: i18n,
     month: month, year: year, hasBalance: hasBalance, hasUsage: hasUsage,
-    totalBalance: totalBalance, monthCost: monthCost, remaining: remaining,
+    totalBalance: totalBalance, monthCost: monthCost,
     bal: bal,
   }).replace(/</g, '\\u003c').replace(/-->/g, '--\\>');
 
@@ -211,7 +210,6 @@ function buildPanelHtml(balance, usage, i18n, month, year) {
     <div class="cards">
       <div class="card"><div class="label">${i18n.balance}</div><div class="value">¥${fmtCost(totalBalance)}</div><div class="sub">${i18n.toppedUp}: ¥${fmtCost(parseFloat(bal.topped_up_balance))} | ${i18n.granted}: ¥${fmtCost(parseFloat(bal.granted_balance))}</div></div>
       <div class="card cost"><div class="label">${i18n.monthCost}</div><div class="value">¥${fmtCost(monthCost)}</div><div class="sub">${hasUsage ? fmtNum(usage.totalTokens) + ' tokens' : ''}</div></div>
-      <div class="card remaining"><div class="label">${i18n.remaining}</div><div class="value">¥${fmtCost(remaining)}</div><div class="sub">${remaining >= 0 ? (remaining > 0 ? 'OK' : 'Zero') : 'Over!'}</div></div>
     </div>` : `<div class="empty"><p>${i18n.errNoApiKey}</p></div>`;
 
   return `<!DOCTYPE html><html lang="zh-CN">
@@ -227,12 +225,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .btn{padding:5px 14px;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:500}
 .btn-primary{background:var(--vscode-button-background);color:var(--vscode-button-foreground)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
 .card{background:var(--vscode-input-background);border:1px solid var(--vscode-input-border,transparent);border-radius:6px;padding:14px 16px}
 .card .label{font-size:11px;text-transform:uppercase;color:var(--vscode-descriptionForeground);margin-bottom:4px;letter-spacing:.5px}
 .card .value{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
 .card .sub{font-size:11px;color:var(--vscode-descriptionForeground);margin-top:2px}
-.card.remaining .value{color:#22c55e}
 .card.cost .value{color:#f59e0b}
 .section-title{font-size:13px;font-weight:600;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
 .chart-wrap{background:var(--vscode-input-background);border-radius:6px;padding:12px;margin-bottom:12px;position:relative}
@@ -526,13 +523,12 @@ function render(data) {
   // Balance cards (can come from data or from render call)
   if (data.type === 'updateData' || data.type === 'init') {
     var hb = d.hasBalance;
-    var tb = d.totalBalance||0, mc = d.monthCost||0, rem = d.remaining||0;
+    var tb = d.totalBalance||0, mc = d.monthCost||0;
     if (hb && d.bal) {
       document.getElementById('balanceArea').innerHTML =
         '<div class="cards">' +
         '<div class="card"><div class="label">'+(i18n.balance||'Balance')+'</div><div class="value">¥'+fmtCost(tb)+'</div><div class="sub">'+(i18n.toppedUp||'Topped Up')+': ¥'+fmtCost(parseFloat(d.bal.topped_up_balance))+' | '+(i18n.granted||'Granted')+': ¥'+fmtCost(parseFloat(d.bal.granted_balance))+'</div></div>' +
         '<div class="card cost"><div class="label">'+(i18n.monthCost||'This Month')+'</div><div class="value">¥'+fmtCost(mc)+'</div></div>' +
-        '<div class="card remaining"><div class="label">'+(i18n.remaining||'Remaining')+'</div><div class="value">¥'+fmtCost(rem)+'</div></div>' +
         '</div>';
     }
   }
